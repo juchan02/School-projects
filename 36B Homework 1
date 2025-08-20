@@ -1,0 +1,59 @@
+/**
+ * @author: Justin Chan
+ * @purpose: to show the current angle of a robotic arm
+ * 
+ */
+
+#include <iostream>
+#include "Angle.h"
+using std::cout;
+using std::endl;
+
+Angle::Angle(void){
+    /**
+     * @purpose: constructor with inital value of 30
+     */
+    theta = 30;
+}
+
+void Angle::set(int t){
+    /**
+     * @purpose: sets the angle for theta
+     * @param t: the value to change theta to
+     */
+
+    theta = t;
+}
+
+int Angle::get(void){
+    /** 
+     * @purpose: gets the value of theta
+     * @return: the current value of theta
+    */
+
+    return theta;
+}
+
+void Angle::change(int dt){
+/**
+ * @purpose: to chnage the value of theta by a certain amount
+ * @param dt: the amount of change for the angle
+ * 
+ */
+
+    if(theta + dt < -60){
+        set(-60);
+    }else if(theta + dt > 120){
+        set(120);
+    }else{
+        set(theta + dt);
+    }
+}
+
+void Angle::print(void){
+/**
+ * @purpose: print the current angle on the screen
+ */
+
+    cout << "angle: " << theta << endl;
+}
