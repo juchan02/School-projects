@@ -1,0 +1,289 @@
+/**
+ * @author: Justin Chan 923264059
+ * @purpose: to calculate a multiple fractions together and simplify the answer
+ */
+
+#include <iostream> 
+#include <stdexcept>
+#include <cmath>
+#include "Fraction.h"
+using namespace std;
+
+
+
+Fraction::Fraction(){
+    /**
+     * @purpose: creates a fraction object with value of 0
+     */
+
+    numerator = 0;
+    denominator = 0;
+}
+
+Fraction::Fraction(int val){
+    /**
+     * @purpose: creates a fraction object based on whole number
+     * @param val: the value of the fraction
+     */
+
+    numerator = val;
+    denominator = 1;
+}
+
+Fraction::Fraction(int Nval, int Dval){
+    /**
+    * @purpose: creates an object fraction 
+    * @param Nval: the numerator
+    * @param Dval: the denominator
+    */
+
+    numerator = Nval;
+    denominator = Dval;
+    this->reducing();
+}
+
+int Fraction::getNum() const{
+    /**
+     * @purpose: tell the numerator of the fraction object
+     * @return: the numerator value of the fraction 
+     */
+
+    return numerator;
+}
+
+int Fraction::getDen() const{
+    /**
+     * @purpose: tell the demoninator of the fraction object
+     * @return: the demoninator value of the fraction
+     */
+
+    return denominator;
+}
+            
+const Fraction operator+(const Fraction& one, const Fraction& two){
+    /**
+     * @purpose: adds 2 fractions objects together
+     * @param two: the second fraction
+     * @return: a new fraction object that has is reduced
+     */
+
+    int numer = (one.numerator * two.denominator) + (two.numerator * one.denominator);
+    int denum = one.denominator * two.denominator;
+    Fraction thing = Fraction(numer, denum);
+    thing.reducing();
+    return thing;
+}
+
+const Fraction Fraction::operator+(const Fraction& two){
+    /**
+     * @purpose: adds 2 fractions objects together
+     * @param two: the second fraction
+     * @return: a new fraction object that has is reduced
+     */
+
+    Fraction copy = Fraction();
+    if(this->numerator > 0 && this->denominator > 1){
+        copy.numerator = this->numerator * two.denominator;
+        copy.denominator = this->denominator * two.denominator;
+    }else if (two.numerator > 0 && two.denominator == 1){
+        copy.numerator = two.numerator;
+        copy.denominator = two.denominator * this->denominator;
+    }else{
+        copy.numerator = this->numerator;
+        copy.denominator = 1;
+    }
+        int numer = (copy.numerator * two.denominator) + (two.numerator * copy.denominator);
+        // cout << numer << endl;
+        int denum = copy.denominator * two.denominator;
+        // cout << denum << endl;
+        Fraction thing = Fraction(numer, denum);
+        thing.reducing();
+        return thing;
+
+}
+
+
+
+const Fraction Fraction::operator-(const Fraction& two){
+     /**
+     * @purpose: subtracts 2 fractions objects together
+     * @param two: the second fraction
+     * @return: a new fraction object that has is reduced
+     */
+    
+    int numer = ((this->numerator) * two.denominator) - (two.numerator * (this->denominator));
+    int denum = this->denominator * two.denominator;
+    Fraction thing = Fraction(numer, denum);
+    thing.reducing();
+    return thing;
+
+}
+
+const Fraction Fraction::operator-(void){
+    /**
+     * @purpose: creates a negative fraction
+     * @return: a new negative fraction object
+     */
+
+    int numer = (this->numerator) * (-1);
+    Fraction thing = Fraction(numer, this->denominator);
+    thing.reducing();
+    return thing;
+}
+
+const Fraction operator-(const Fraction& one, const Fraction& two){
+     /**
+     * @purpose: subtracts 2 fractions objects together
+     * @param two: the second fraction
+     * @return: a new fraction object that has is reduced
+     */
+
+
+    Fraction copy = Fraction();
+    if(one.numerator > 0 && one.denominator == 1){
+        copy.numerator = one.numerator * two.denominator;
+        copy.denominator = one.denominator * two.denominator;
+    }else if (two.numerator > 0 && two.denominator == 1){
+        copy.numerator = two.numerator * one.denominator;
+        copy.denominator = two.denominator * one.denominator;
+    }else{
+        copy.numerator = one.numerator;
+        copy.denominator = one.denominator;
+    }
+
+    int numer = (copy.numerator * two.denominator) - (two.numerator * copy.denominator);
+    int denum = copy.denominator * two.denominator;
+
+    Fraction thing = Fraction(numer, denum);
+    thing.reducing();
+    return thing;
+}
+
+const Fraction Fraction::operator=(int x){
+    /**
+     * @purpose: replaces fraction with whole number
+     */
+
+    this->numerator = x;
+    return 0;
+}
+
+const Fraction Fraction::operator*(const Fraction& two){
+    /**
+     * @purpose: to multiply 2 fractions together
+     * @param two: the second fraction to multiply
+     * @return: the reduced form of the product of the 2 fractions
+     */
+    
+    int numer = (this->numerator * two.numerator);
+    int denum = (this->denominator * two.denominator);
+    Fraction thing = Fraction(numer, denum);
+    thing.reducing();
+    return thing;
+
+}
+
+const Fraction operator*(const Fraction& one, const Fraction& two){
+    /**
+     * @purpose: to multiply 2 fractions together
+     * @param two: the second fraction to multiply
+     * @return: the reduced form of the product of the 2 fractions
+     */
+    
+    int numer = (one.numerator * two.numerator);
+    int denum = (one.denominator * two.denominator);
+    Fraction thing = Fraction(numer, denum);
+    thing.reducing();
+    return thing;
+
+}
+
+const Fraction Fraction::operator/(const Fraction& two){
+    /**
+     * @purpose: subtracts 2 fractions objects together
+     * @param two: the second fraction
+     * @return: a new fraction object that has is reduced
+     */
+
+    // if(two.denominator || this->denominator == 0){
+    //     throw invalid_argument("zero denominator");
+    // }
+
+   if(two.numerator == 0){
+    throw invalid_argument("zero denominator");
+   }
+
+    int numer = (this->numerator * two.denominator);
+    int denum = (this->denominator * two.numerator);
+
+    Fraction thing = Fraction(numer, denum);
+    thing.reducing();
+    return thing;
+
+}
+
+const Fraction operator/(const Fraction& one, const Fraction& two){
+    /**
+     * @purpose: subtracts 2 fractions objects together
+     * @param two: the second fraction
+     * @return: a new fraction object that has is reduced
+     */
+
+    if(one.denominator == 0 || two.denominator == 0){
+        throw invalid_argument("Exception: zero denominator");
+    }
+
+    int numer = (one.numerator * two.denominator);
+    int denum = (one.denominator * two.numerator);
+
+    Fraction thing = Fraction(numer, denum);
+    thing.reducing();
+    return thing;
+
+}
+
+ostream& operator <<(ostream& os,const Fraction& one){
+    if(one.denominator > 1){
+        os << one.numerator << "/" << one.denominator;
+        return os;
+    }else{
+        return os << one.numerator;
+    }
+}
+
+
+void Fraction::reducing(void){
+    /**
+     * @purpose: to reduce a fraction
+     * @param frac: fraction object to reduce
+     */
+
+        int greatestCommonDenom = gcd(this->numerator, this->denominator);
+        this->numerator = this->numerator / greatestCommonDenom;
+        this->denominator = this->denominator / greatestCommonDenom;
+}
+
+int Fraction::gcd(int Nval, int Dval){
+    /**
+     * @purpose: getting the greatest common demoninator
+     * @param Nval: numerator
+     * @param Dval: denominator
+     * @return: the greatest common denominator, returns 1 otherwise
+     */
+    
+    int nume = Nval;
+    int dem = Dval;
+    int greatestCommon = 0;
+    int remainder = 0;
+    
+    remainder = Nval % Dval;
+    while(remainder != 0){
+        nume = dem;
+        dem = remainder;
+        remainder = nume % dem;
+    }
+    greatestCommon = abs(dem);
+    return greatestCommon;
+   
+    
+}
