@@ -1,0 +1,140 @@
+/**
+ * @author Justin Chan studnet ID 923264059
+ */
+
+#include "Aircrew.h"
+#include <iostream>
+
+
+//Aircrew start
+Aircrew::Aircrew(std::string name_str): nm(name_str){
+    flightsTaken = 0;
+    hoursWorked = 0;
+}
+
+Aircrew* Aircrew::makeAircrew(char ch, std::string name_str){
+    if(ch == 'P'){
+        return new Pilot(name_str);
+    }else if (ch == 'A'){
+        return new Attendant(name_str);
+    }else if (ch == 'T'){
+        return new TaggedAttendant(name_str);
+    }else{
+        return 0;
+    }
+}
+
+const double Aircrew::maxHours(void) const{
+    return 60;
+}
+
+const std::string Aircrew::name(void) const{
+    return nm;
+}
+
+void Aircrew::setFlights(int i){
+/**
+ * @purpose: set the number of flights taken
+ * @param int i: number of flights
+ */
+
+flightsTaken = i;
+
+}
+
+void Aircrew::setHours(double h){
+/**
+ * @purpose: set the number of hours worked
+ * @param double h: the hours that was worked
+ */
+
+hoursWorked = h;
+
+}
+
+void Aircrew::print(void) const{
+    std::cout << type() << ": " << name() << " has operated " << flightsTaken << " flights for a total of " << hoursWorked << " hours this week" << std::endl;
+    std::cout << "Available flights: " << maxFlights() - flightsTaken << std::endl;
+    std::cout << "Available hours: " << maxHours() - hoursWorked << std::endl;
+}
+
+void Aircrew::scheduleFlight(int f, double h) const{
+    std::cout << "Attempting to schedule for " << f << " stop(s) " << h << " hours flight..." << std::endl;
+    if(maxFlights() - flightsTaken > f && maxHours() - hoursWorked > h){
+        std::cout << "This crew member can be scheduled" << std::endl;
+    }else{
+        std::cout << "This crew member should be replaced" << std::endl;
+    }
+        std::cout << "Done scheduling " << nm << std::endl;
+
+}
+
+Aircrew::~Aircrew(void){
+}
+// Air Crew end
+
+//Pilot derived class
+
+Pilot::Pilot(std::string name_str): Aircrew(name_str){
+    flightsTaken = 0;
+    hoursWorked = 0;
+}
+
+const std::string Pilot::type(void) const{
+    /**
+     * @purpose: returns a string for the type name
+     */
+
+    return "Pilot";
+}
+
+const int Pilot::maxFlights(void) const{
+    /**
+     * @purpose: returns an int of the number of flight they can do
+     */
+
+    return 5;
+}
+
+// End of Pilot derived class
+
+
+//Attendant derived class
+Attendant::Attendant(std::string name_str): Aircrew(name_str){
+    flightsTaken = 0;
+    hoursWorked = 0;
+}
+
+const std::string Attendant::type(void) const{
+    return "Attendant";
+}
+
+const int Attendant::maxFlights(void) const{
+    return 8;
+}
+//End of Attendant derived class
+
+
+//TaggedAttedant derived class
+
+    TaggedAttendant::TaggedAttendant(std::string name_str): Aircrew(name_str){
+        flightsTaken = 0;
+        hoursWorked = 0;
+    }
+    const std::string TaggedAttendant::type(void) const{
+        return "TaggedAttendant";
+    }
+    const int TaggedAttendant::maxFlights(void) const{
+        return 8;
+    }
+    void TaggedAttendant::scheduleFlight(int f, double h) const{
+        std::cout << "Attempting to schedule for " << f << " stop(s) " << h << " hours flight..." << std::endl;
+        if(maxFlights() - flightsTaken > f && maxHours() - hoursWorked > (h / 2.0)){
+            std::cout << "This crew member can be scheduled" << std::endl;
+        }else{
+            std::cout << "This crew member should be replaced" << std::endl;
+        }
+            std::cout << "Done scheduling " << nm << std::endl;
+    }
+
+//End of TaggedAttendant derived class
